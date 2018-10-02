@@ -11,10 +11,7 @@
  */
 class CoordinateSystem {
 // PRIVATE DATA
-    public x: number;
-    public y: number;
-    public theta: number;
-    public magnitude: number;
+    private data: Matrix[];
 
     // COORDINATE PROPERTIES
     private coordWidth: number;
@@ -35,7 +32,7 @@ class CoordinateSystem {
      */
     constructor(coordWidth: number, coordHeight: number, resolution?: number) {
         // Set Default Values
-        this.x = this.y = this.theta = this.magnitude = 0;
+        this.data = [];
         this.triWidth = 5;
         this.triHeight = 1;
 
@@ -112,7 +109,12 @@ class CoordinateSystem {
 
 
         // Draw the Vectors on top of the Coordinate System
-        this.drawVectors(midX, midY);
+        for (const m of this.data) {        // Get all Matrix Objects
+            for (const vec of m.data) {     // Break down all the Vectors inside each Object
+                // Draw Each Vector
+                this.drawVectors(midX, midY, vec);
+            }
+        }
     }
 
     /** Resize Coordinate System
@@ -125,21 +127,31 @@ class CoordinateSystem {
         this.coordHeight = newHeight;
     }
 
-    /** Adds a Vector to the System
+    /** Adds a Vector to the System | Matrix Object of Dimension m*2
      * 
-     * @param x The x-axis Value of the Vector
+     * @param x The x-axis Value of the Vector or a Matrix Object
      * @param y The y-axis Value of the Vector
      */
-    public addVector(x: number, y: number): void {
-        // Check / Assign Vector
-        this.x = x;
-        this.y = y;
+    public addVector(x: number | Matrix, y?: number): void {
+        // Check if Matrix Object
+        if (x instanceof Matrix) {
+            // Check if m*2 Matrix
+            if (x.getColumns() !== 2) {
+                console.error("Invalid Matrix Dimensions! Only m by 2 Matricies are allowed!");
+                return;
+            }
 
-        // Calculate Magnitude Data
-        this.magnitude = CoordinateSystem.calculateMagnitude(this.x, this.y);
+            this.data.push(x);
+        }
 
-        // Calculate Angle Data
-        this.theta = CoordinateSystem.calculateAngle(this.x, this.y);
+        // Create a Matrix Object with Set Values
+        else {
+            const m = new Matrix(1, 2);
+            y = y !== undefined ? y : 0;
+            m.set([[x, y]]);
+            
+            this.data.push(m);
+        }
     }
 
     /** Sets Vector Pointer's Dimensions (Size)
@@ -166,8 +178,9 @@ class CoordinateSystem {
      * 
      * @param originX The Origin X-Axis Point
      * @param originY The Origin Y-Axis Point
+     * @param vec 2DVector Array to Draw
      */
-    private drawVectors(originX: number, originY: number): void {
+    private drawVectors(originX: number, originY: number, vec: number[]): void {
         // START DRAWING
         ctx.save();
         ctx.strokeStyle = "rgb(0, 200, 0)";
@@ -177,8 +190,10 @@ class CoordinateSystem {
         ctx.beginPath();
 
         // DRAW VECTOR LINE
-        const x = originX + (this.x * this.spacing);
-        const y = originY - (this.y * this.spacing);
+        const x = originX + (vec[0] * this.spacing);
+        const y = originY - (vec[1] * this.spacing);
+        const magnitude = CoordinateSystem.calculateMagnitude(vec[0], vec[1]);
+        const theta = CoordinateSystem.calculateAngle(vec[0], vec[1]);
 
         ctx.lineTo(originX, originY);
         ctx.lineTo(x, y);
@@ -189,14 +204,14 @@ class CoordinateSystem {
 
         
         // DRAW POINTER TRIANGLE
-        const tX1 = originX + (((this.magnitude - this.triHeight) * Math.cos(this.theta)) * this.spacing);
-        const tY1 = originY - (((this.magnitude - this.triHeight) * Math.sin(this.theta)) * this.spacing);
+        const tX1 = originX + (((magnitude - this.triHeight) * Math.cos(theta)) * this.spacing);
+        const tY1 = originY - (((magnitude - this.triHeight) * Math.sin(theta)) * this.spacing);
 
-        const tX2 = tX1 + (this.triWidth * Math.cos(this.theta + (Math.PI / 2)));
-        const tY2 = tY1 - (this.triWidth * Math.sin(this.theta + (Math.PI / 2)));
+        const tX2 = tX1 + (this.triWidth * Math.cos(theta + (Math.PI / 2)));
+        const tY2 = tY1 - (this.triWidth * Math.sin(theta + (Math.PI / 2)));
 
-        const tX3 = tX1 + (this.triWidth * Math.cos(this.theta - (Math.PI / 2)));
-        const tY3 = tY1 - (this.triWidth * Math.sin(this.theta - (Math.PI / 2)));
+        const tX3 = tX1 + (this.triWidth * Math.cos(theta - (Math.PI / 2)));
+        const tY3 = tY1 - (this.triWidth * Math.sin(theta - (Math.PI / 2)));
 
 
         ctx.beginPath();
