@@ -469,12 +469,12 @@ class Matrix extends MatrixError {
 
 // Static Methods
      
-    /** Static Matrix Multiplication
+    /** Matrix Dot Product
      * @param matrixA The Matrix Object A
      * @param matrixB THe Matrix Object B
      * @returns A new Matrix Object
      */
-    static multiply(matrixA: Matrix, matrixB: Matrix): Matrix {
+    static dot(matrixA: Matrix, matrixB: Matrix): Matrix {
         // Make sure row of A matches column of B
         if (matrixA.getColumns() !== matrixB.getRows()) {
             console.error(new Error("MatrixA Columns must match MatrixB Rows!"));
