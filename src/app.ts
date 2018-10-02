@@ -20,6 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
     CoordSystem = new CoordinateSystem(WIDTH, HEIGHT, 10);
     CoordSystem.addVector(10, 10);
 
+    // Adding a Matrix Object of m by 2 Dimensions
+    CoordSystem.addVector(
+        Matrix.fromArray([
+
+            [8, 5],
+            [-10, -10],
+            [-6, 15],
+            [20, -15]
+
+        ]));
+
     // Init Drawing
     draw();
 });
