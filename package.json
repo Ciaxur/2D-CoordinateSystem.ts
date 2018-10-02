@@ -1,0 +1,14 @@
+{
+    "name": "coordinatesystem_playground.ts",
+    "version": "0.0.1",
+    "description": "Simple Coordinate System for playing around with drawing vectors, matricies, etc...",
+    "main": "app.js",
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch"
+    },
+
+    "author": "Omar Omar",
+    "license": "MIT"
+
+}
