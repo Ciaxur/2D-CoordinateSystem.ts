@@ -171,6 +171,11 @@ class CoordinateSystem {
         this.triHeight = height;
     }
 
+    /** Resets Vector data | Removes all data */
+    public reset(): void {
+        this.data = [];
+    }
+
 
 
 // PRIVATE METHODS
