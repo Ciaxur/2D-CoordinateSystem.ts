@@ -112,7 +112,7 @@ class CoordinateSystem {
         for (const m of this.data) {        // Get all Matrix Objects
             for (const vec of m.data) {     // Break down all the Vectors inside each Object
                 // Draw Each Vector
-                this.drawVectors(midX, midY, vec);
+                this.drawVectors(midX, midY, (vec as number[]));
             }
         }
     }

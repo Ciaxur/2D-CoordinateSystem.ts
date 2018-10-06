@@ -124,10 +124,10 @@ abstract class MatrixError {
 /** Matrix Class that Calculates simple Matrix Operations used for Neural Networks */
 class Matrix extends MatrixError {
     // Class Variables
-    private rows:       number;         // Rows of the Matrix
-    private columns:    number;         // Columns of the Matrix
-    public  shape:      string;         // The Shape of the 2D Matrix String -> [Rows,Columns]
-    public  data:       number[][];     // The Matrix Itself (2D Array)
+    private rows:       number;                     // Rows of the Matrix
+    private columns:    number;                     // Columns of the Matrix
+    public  shape:      string;                     // The Shape of the 2D Matrix String -> [Rows,Columns]
+    public  data:       number[][] | number[];      // The Matrix Itself (2D Array)
     
     /** Constructs the Basics of the Matrix
      * @constructor Initiates the Matrix Rows and Columns
@@ -531,7 +531,7 @@ class Matrix extends MatrixError {
                     let sum = 0;
 
                     for (let i = 0; i < matrixA.getColumns(); i++) {
-                        sum += matrixA.data[x][i] * matrixB.data[i][y];
+                        sum += matrixA.data[x][i] * (matrixB.data[i] as number);
                     }
 
                     return sum;
