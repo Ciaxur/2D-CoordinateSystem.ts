@@ -221,7 +221,8 @@ class Matrix extends MatrixError {
         // Element-By-Element Product (Hadamard)
         if (n instanceof Matrix) {
             if (n.shape === this.shape) {
-                this.map((val, x, y) => val * n.data[x][y]);
+                const result = Matrix.multiply(this, n);
+                this.set(result.data);
             }
 
             // Verify Dimensions
@@ -540,6 +541,30 @@ class Matrix extends MatrixError {
         
             return m;
         }
+    }
+
+    /** Matrix Multiplies two Matricies
+     * 
+     * @param matrixA First Matrix
+     * @param matrixB Second Matrix
+     * @returns New Matrix that yields the result of the two Matricies Multiplied
+     */
+    static multiply(matrixA: Matrix, matrixB: Matrix): Matrix {
+        // Check if Multiplication is Valid
+        if (matrixA.shape !== matrixB.shape) {
+            console.error("Matrix Multiplication Error: Invalid Dimensions for matrixA and matrixB. Both have to be the same shape.");
+            return null;
+        }
+        
+        // Multiply the 2 Matricies
+        return new Matrix(matrixA.columns, matrixB.rows)
+        .map((val, x, y) => {
+            let sum = 0;
+            for (let k = 0; k < matrixA.columns; k++) {
+                sum += matrixA.data[x][k] * matrixB.data[k][y];
+            }
+            return sum;
+        });
     }
     
     
