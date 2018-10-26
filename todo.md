@@ -9,4 +9,6 @@
     - When **Vector is Clicked, Highlight** it as being worked on?
 - Add **Interactive Buttons Functionality**
     - Functions on Vectors for all Methods in the **`CoordinateSystem Class`**
+
+## Finished Changes
 - Type up the **`README.md`** file
