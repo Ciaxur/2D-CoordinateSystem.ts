@@ -136,9 +136,14 @@ class CoordinateSystem {
         // Check if Matrix Object
         if (x instanceof Matrix) {
             // Check if m*2 Matrix
-            if (x.getColumns() !== 2) {
+            if (x.getColumns() !== 2 && x.getRows() !== 2) {
                 console.error("Invalid Matrix Dimensions! Only m by 2 Matricies are allowed!");
                 return;
+            }
+
+            // Transpose from [2,1] to [1,2]
+            if (x.getColumns() !== 2) {
+                x.transpose();
             }
 
             this.data.push(x);
@@ -176,9 +181,93 @@ class CoordinateSystem {
         this.data = [];
     }
 
+    /** Draw the Projection Matrix onto Coordinate System
+     * @param projMatrix Projection Matrix (Matrix Object) of Dimensions [2,2]
+     */
+    public showProjectionMatrix(mat: Matrix): void {
+        // Check if Projection Matrix is Valid
+        if (!this.checkProjectionMatrix(mat)) {
+            console.error("Projection Matrix Invalid: Invalid mat Parameter, NOT a Projection Matrix!");
+            return;
+        }
+
+        // Create the Vectors Along the X-Axis
+        const vec1 = Matrix.fromArray([[this.coordHeight, 0]]);
+        const vec2 = Matrix.fromArray([[-this.coordHeight, 0]]);
+
+        // Get the Result of Projecting onto the Projection Matrix
+        const res1 = this.dotMat2(mat, vec1);
+        const res2 = this.dotMat2(mat, vec2);
+
+        // Display
+        this.addVector(res1);
+        this.addVector(res2);
+    }
+
+    /** Draws the Shadow Projected from the vector onto a Projection Matrix 
+     * 
+     * @param matrixProjection The Projection Matrix
+     * @param vec The Vector that will be applied to the Projection Matrix
+     */
+    public drawProjectionFromVec(matrixProjection: Matrix, vec: Matrix): void {
+        // Check if Projection Matrix is Valid
+        if (!this.checkProjectionMatrix(matrixProjection)) {
+            console.error("Projection Matrix Invalid: Invalid mat Parameter, NOT a Projection Matrix!");
+            return;
+        }
+
+        // Get the Shadow Projected onto Matrix
+        const vecShadow = this.dotMat2(matrixProjection, vec);
+
+        // Add to the Coordinate Plane
+        this.addVector(vecShadow);
+    }
 
 
 // PRIVATE METHODS
+    /** Returns a 2D Rotational Matrix
+     * @param angle The Angle (in Radians) to rotate by
+     * @returns 2D Rotational Matrix
+     */
+    private getRotationMatrix(angle: number): Matrix {
+        const x = Math.cos(angle);
+        const y = Math.sin(angle);
+        
+        return Matrix.fromArray([
+            [ x, y],
+            [-y, x]
+        ]);
+    }
+    
+    /** Performs the Dot Product on a 2x2 Matrix by a 1x2 Vector
+     * 
+     * @param mat A 2x2 Matrix Object
+     * @param vec A 1x2 Matrix Object (Vector)
+     * @returns Matrix Object Result of Dot Product (1x2 Matrix Vector)
+     */
+    private dotMat2(mat: Matrix, vec: Matrix): Matrix {
+        // Test Dimensions
+        if (mat.getColumns() !== 2 || mat.getRows() !== 2) {
+            console.error(new Error("Invalid Matrix Dimensions: mat Parameter has to be a 2x2 Matrix!"));
+            return null;
+        }
+
+        if (vec.getColumns() !== 2 || vec.getRows() !== 1) {
+            console.error(new Error("Invalid Matrix Dimensions: vec Parameter has to be a 1x2 Matrix!"));
+            return null;
+        }
+        
+        // Perform the Dot Product
+        const matArr: number[][] = mat.dataCopy() as number[][];
+        const vecArr: number[] = (vec.dataCopy()[0]) as number[];
+
+        let x = (matArr[0][0] * vecArr[0]) + (matArr[0][1] * vecArr[1]);
+        let y = (matArr[1][0] * vecArr[0]) + (matArr[1][1] * vecArr[1]);
+
+        // Return Result 2D Vector (1x2)
+        return Matrix.fromArray([[x, y]]);
+    }
+
     /** Draw Vectors onto the Coordinate System
      * 
      * @param originX The Origin X-Axis Point
@@ -231,6 +320,41 @@ class CoordinateSystem {
         ctx.closePath();
 
         ctx.restore();
+    }
+
+    /** Checks if Matrix is a Valid 2D Projection Matrix
+     * 
+     * @param projMatrix Matrix that will be tested if is Valid Projection Matrix (2x2 Matrix)
+     */
+    private checkProjectionMatrix(mat: Matrix): Boolean {
+        // Check if Matrix is Valid
+        if (mat.getColumns() !== 2 || mat.getRows() !== 2) {
+            console.error("Invalid Dimensions: mat Parameter has to be a 2x2 Matrix");
+            return false;
+        }
+        
+        // Matrix Multiply mat * mat to check if it equals mat
+        const matArr: number[][] = mat.data as number[][];
+        
+        // Manual Checks
+        // 0,0
+        if ((matArr[0][0] * matArr[0][0]) + (matArr[0][1] * matArr[1][0]) !== matArr[0][0]) return false;
+
+        // 0,1
+        else if ((matArr[0][0] * matArr[0][1]) + (matArr[0][1] * matArr[1][1]) !== matArr[0][1]) return false;
+
+        // 1,0
+        else if ((matArr[1][0] * matArr[0][0]) + (matArr[1][1] * matArr[1][0]) !== matArr[1][0]) return false;
+
+        // 1,1
+        else if ((matArr[1][0] * matArr[0][1]) + (matArr[1][1] * matArr[1][1]) !== matArr[1][1]) return false;
+
+        
+        // Debug Check
+        // console.log((matArr[0][0] * matArr[0][0]) + (matArr[0][1] * matArr[1][0]), (matArr[0][0] * matArr[0][1]) + (matArr[0][1] * matArr[1][1]));
+        // console.log((matArr[1][0] * matArr[0][0]) + (matArr[1][1] * matArr[1][0]), (matArr[1][0] * matArr[0][1]) + (matArr[1][1] * matArr[1][1]));
+        
+        return true;
     }
 
 
