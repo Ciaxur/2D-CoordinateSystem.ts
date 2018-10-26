@@ -1,5 +1,6 @@
 # Ignore These
 dist/*
+node_modules
 
 # Except for These
 !dist/index.html
