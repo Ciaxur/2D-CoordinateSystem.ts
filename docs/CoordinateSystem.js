@@ -174,7 +174,7 @@ class CoordinateSystem {
     /** Draw the Projection Matrix onto Coordinate System
      * @param projMatrix Projection Matrix (Matrix Object) of Dimensions [2,2]
      */
-    showProjectionMatrix(mat) {
+    drawProjectionMatrix(mat) {
         // Check if Projection Matrix is Valid
         if (!this.checkProjectionMatrix(mat)) {
             console.error("Projection Matrix Invalid: Invalid mat Parameter, NOT a Projection Matrix!");
