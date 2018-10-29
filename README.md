@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 - **reset**
     - Resets the Data that is on the Coordinate System (Removes all vectors)
 
-- **showProjectionMatrix**
+- **drawProjectionMatrix**
     - Draws an Estimate (for simple Projection Matricies) onto the Coordinate System
     - **`mat`** - The Projection Matrix Object (Has to be a Valid One | Will be validated anyway)
 
@@ -82,9 +82,35 @@ document.addEventListener("DOMContentLoaded", () => {
     - **`mat`** - A Matrix Object (2x2) Dimensions
     - **`vec`** - A Matrix Object (1x2) Dimensions (The 2D Vector)
 
+- **drawVectors**
+    - Draws all Vectors from **`vectorData`** onto Plane
+
+- **drawPoints**
+    - Draws all Points from **`pointsData`** onto Plane
+
+- **drawPolynomials**
+    - Draws all Polynomials from **`polynomialData`** onto Plane
+
 - **checkProjectionMatrix**
     - Checks if a given Matrix is a Valid Projection Matrix
     - **`mat`** - The Projection Matrix that will be Validated
+
+- **add_Mx2**
+    - Checks if a given Matrix is a Valid Projection Matrix
+    - **`x`** - X-Axis Value or Matrix Object that will be added to Data
+    - **`y`** - Y-Axis Value that will be added to Data
+    - **`dataType`** - The Data Type of the Data (vector, point, or polynomial)
+
+- **drawCirc**
+    - Draws a circle at the given Coordinate Parameters
+    - **`x`** - X-Axis Point Value
+    - **`y`** - Y-Axis Point Value
+
+- **adjustToOrigin**
+    - Adjusts Value Relative to Origin
+    - **`n`** - Coordinate Value that will be adjusted
+    - **`isY`** - Boolean that states if Relative to X or Y Origin
+
 
 ---
 ### `Static Methods`
@@ -97,6 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
     - Calculates the Angle of a given Vector in Radians (As a Unit Circle)
     - **`x`** - The x-Axis of the Vector
     - **`y`** - The y-Axis of the Vector
+
+- **solvePolynomialY**
+    - Calculates Polynomial for 'y'
+    - **`x`** - The x value that will be calculated against the Polynomial
+    - **`polyArr`** - Array of Polynomial Values | EXAMPLE INPUT: [1,2,3] -> [1x^2, 2x, 3] -> y = x^2 + 2x + 3
 
 
 ---
