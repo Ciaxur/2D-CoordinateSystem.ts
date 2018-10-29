@@ -326,7 +326,7 @@ class CoordinateSystem {
                 }
                 // Organize & Draw the Polynomial
                 else {
-                    for (let i = -maxX; i < maxX; i += 1) {
+                    for (let i = -maxX; i < maxX; i += 0.1) {
                         const result = CoordinateSystem.solvePolynomialY(i, vec);
                         const y = this.adjustToOrigin(result, true);
                         const x = this.adjustToOrigin(i, false);
