@@ -102,6 +102,9 @@ class CoordinateSystem {
     resize(newWidth, newHeight) {
         this.coordWidth = newWidth;
         this.coordHeight = newHeight;
+        // Update Origin Value
+        this.originX = Math.floor(this.coordWidth / 2);
+        this.originY = Math.floor(this.coordHeight / 2);
     }
     /** Adds a Vector to the System | Matrix Object of Dimension m*2
      *
