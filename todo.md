@@ -1,8 +1,10 @@
 ## Upcomming Changes / Plans
 
-- Add ability in **`CoordinateSystem Class`** for **Linear Transformation** of Entire Coordinate Plane
-- Refactor the **`data`** member in the **`CoordinateSystem Class`** to support **COLORS** for each Vector Drawn
+- Refactor the *data* members in the **`CoordinateSystem Class`** to support **COLORS** for each Vector Drawn
     - **Default** is Green
+- Fix **`Matrix Class`**
+
+- Add ability in **`CoordinateSystem Class`** for **Linear Transformation** of Entire Coordinate Plane
 - Add **Interactive Mouse Functionality**
     - **Creating a Vector** by Dragging from Origin
     - **Deleting Vector** by some click (Right/Left/Center Click?) or **Buttons**
