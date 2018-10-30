@@ -90,9 +90,12 @@ class CoordinateSystem {
         }
         ctx.restore();
         // DRAW ALL DATA
-        this.drawVectors();
-        this.drawPoints();
-        this.drawPolynomials();
+        if (this.vectorData.length)
+            this.drawVectors();
+        if (this.pointsData.length)
+            this.drawPoints();
+        if (this.polynomialData.length)
+            this.drawPolynomials();
     }
     /** Resize Coordinate System
      *
@@ -171,6 +174,18 @@ class CoordinateSystem {
         this.pointsData = [];
         this.polynomialData = [];
     }
+    /** Clears all Vector Data */
+    clearVectors() {
+        this.vectorData = [];
+    }
+    /** Clears all Points Data */
+    clearPoints() {
+        this.pointsData = [];
+    }
+    /** Clears all Polynomial Data */
+    clearPolynomial() {
+        this.polynomialData = [];
+    }
     /** Draw the Projection Matrix onto Coordinate System
      * @param projMatrix Projection Matrix (Matrix Object) of Dimensions [2,2]
      */
@@ -205,6 +220,43 @@ class CoordinateSystem {
         const vecShadow = this.dotMat2(matrixProjection, vec);
         // Add to the Coordinate Plane
         this.addVector(vecShadow);
+    }
+    /** Draws Best Fit Linear Polynomoial to Points
+     *
+     * @param pointsArr The Points 2D Array
+     */
+    drawBestFitLinear(pointsArr) {
+        // Ax = b
+        const Aarr = []; // A Data Array for Matrix
+        const Barr = []; // B Data Array for Matrix
+        // Get the Data
+        for (const point of pointsArr) {
+            Aarr.push([point[0], 1]); // Push the Coefficient of m and b
+            Barr.push(point[1]); // Push the 'y' value (mx + b = y)
+        }
+        // Construct the Matricies & Calculate Data
+        const A = new Matrix(Aarr);
+        const At = Matrix.transpose(A);
+        const AtA = Matrix.multiply(At, A);
+        const AtAinv = Matrix.invert2x2(AtA);
+        const B = new Matrix(Barr);
+        const AtB = Matrix.multiply(At, B);
+        const x = Matrix.multiply(AtAinv, AtB);
+        // Construct the mx + b Polynomial
+        const m = x.dataCopy()[0];
+        const b = x.dataCopy()[1];
+        // Draw Polynomial
+        this.addPolynomial(m, b);
+    }
+    /** @returns Points Data as Array */
+    getPointsArr() {
+        // Append Data to arr
+        const arr = [];
+        for (const m of this.pointsData) {
+            arr.push(m.dataCopy()[0]); // Deep Copy the Data
+        }
+        // Return Result
+        return arr;
     }
     // PRIVATE METHODS
     /** Returns a 2D Rotational Matrix

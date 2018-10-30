@@ -1,7 +1,8 @@
 "use strict";
 /**
- * Author:  Omar Omar
- * Date:    June 20, 2018
+ * Author:          Omar Omar
+ * Date:            June 20, 2018
+ * Last Modified:   Oct 30, 2018
  *
  *  1D / 2D Matrix Class Library
  *  Matrix Common Errors Class
@@ -104,17 +105,23 @@ class MatrixError {
 class Matrix extends MatrixError {
     /** Constructs the Basics of the Matrix
      * @constructor Initiates the Matrix Rows and Columns
-     * @param rows The Total Matrix Rows
+     * @param rows The Total Matrix Rows | Array that is converted to Matrix Object
      * @param columns The Total Matrix Columns
      */
     constructor(rows, columns) {
         // Call Parent Constructor
         super();
         // Assign the rows & columns
-        this.rows = (rows !== undefined) ? rows : 0; // Assign to rows or 0 if undefined
-        this.columns = (columns !== undefined) ? columns : 0; // Assign to columns or 0 if undefined
-        // Initiate Properties by "reseting" them
-        this.reset();
+        if (!(rows instanceof Array)) {
+            this.rows = (rows !== undefined) ? rows : 0; // Assign to rows or 0 if undefined
+            this.columns = (columns !== undefined) ? columns : 0; // Assign to columns or 0 if undefined
+            // Initiate Properties by "reseting" them
+            this.reset();
+        }
+        // Assign Data from Array
+        else {
+            this.set(Matrix.fromArray(rows).data);
+        }
     }
     /** Console Logs the Table Matrix */
     print() {
@@ -177,14 +184,11 @@ class Matrix extends MatrixError {
     multiply(n) {
         // Element-By-Element Product (Hadamard)
         if (n instanceof Matrix) {
-            if (n.shape === this.shape) {
-                const result = Matrix.multiply(this, n);
+            // Get the Result | Let "multiply" method handle errors
+            const result = Matrix.multiply(this, n);
+            // Check if result is not null
+            if (result)
                 this.set(result.data);
-            }
-            // Verify Dimensions
-            else {
-                console.error(new Error("Matrix Scalar Multiplication requires indentical Dimensions"));
-            }
         }
         // Scalar Product
         else if (typeof (n) === "number") {
@@ -372,67 +376,6 @@ class Matrix extends MatrixError {
         return matrix;
     }
     // Static Methods
-    /** Matrix Dot Product
-     * @param matrixA The Matrix Object A
-     * @param matrixB THe Matrix Object B
-     * @returns A new Matrix Object
-     */
-    static dot(matrixA, matrixB) {
-        // Make sure row of A matches column of B
-        if (matrixA.getColumns() !== matrixB.getRows()) {
-            console.error(new Error("MatrixA Columns must match MatrixB Rows!"));
-            return null;
-        }
-        // Dot-Product Multiplication
-        else {
-            const m = new Matrix(matrixA.getRows(), matrixB.getColumns());
-            // 1D Matrix
-            // Example: MatrixA -> [ [1,2,3] ]
-            if (matrixA.getRows() === 1) {
-                // Varaibles Used
-                const b = matrixB.dataCopy(); // MatrixB's Deep Copied Data
-                let result = 0; // Final Result
-                // Calculate the Result
-                matrixA.map((val, _, y) => {
-                    result += (val * b[y]);
-                    return val;
-                });
-                // Map the Result
-                m.map(() => {
-                    return result;
-                });
-            }
-            // Example: MatrixA -> [1,2,3]
-            else if (matrixA.getColumns() === 1) {
-                // Variables Used
-                let i = 0; // Index for mapping
-                const a = matrixA.dataCopy(); // MatrixA's Deep Copied Data
-                const result = []; // Final Result
-                // Calculate the Result
-                for (let i = 0; i < a.length; i++) {
-                    matrixB.map((val) => {
-                        result.push(a[i] * val); // Push results into array
-                        return val;
-                    });
-                }
-                // Apply the results to the new Matrix
-                m.map(() => {
-                    return result[i++];
-                });
-            }
-            // 2D Matrix
-            else {
-                m.map((_, x, y) => {
-                    let sum = 0;
-                    for (let i = 0; i < matrixA.getColumns(); i++) {
-                        sum += matrixA.data[x][i] * matrixB.data[i];
-                    }
-                    return sum;
-                });
-            }
-            return m;
-        }
-    }
     /** Matrix Multiplies two Matricies
      *
      * @param matrixA First Matrix
@@ -441,13 +384,24 @@ class Matrix extends MatrixError {
      */
     static multiply(matrixA, matrixB) {
         // Check if Multiplication is Valid
-        if (matrixA.shape !== matrixB.shape) {
-            console.error("Matrix Multiplication Error: Invalid Dimensions for matrixA and matrixB. Both have to be the same shape.");
+        if (!(matrixA.getColumns() === matrixB.getRows())) {
+            console.error("Matrix Multiplication Error: Invalid Dimensions for matrixA and matrixB. matrixA's Columns must equal matrixB's Rows!");
             return null;
         }
+        // Multiply Vector with Matrix
+        if (matrixB.getColumns() === 1 || matrixB.getRows() === 1) {
+            return new Matrix(matrixA.rows, matrixB.columns)
+                .map((_, x) => {
+                let total = 0;
+                for (let y = 0; y < matrixB.rows; y++) {
+                    total += matrixA.data[x][y] * matrixB.data[y];
+                }
+                return total;
+            });
+        }
         // Multiply the 2 Matricies
-        return new Matrix(matrixA.columns, matrixB.rows)
-            .map((val, x, y) => {
+        return new Matrix(matrixA.rows, matrixB.columns)
+            .map((_, x, y) => {
             let sum = 0;
             for (let k = 0; k < matrixA.columns; k++) {
                 sum += matrixA.data[x][k] * matrixB.data[k][y];
@@ -482,6 +436,71 @@ class Matrix extends MatrixError {
             return new Matrix(matrix.getColumns(), matrix.getRows())
                 .map((val, x, y) => matrix.data[y][x]);
         }
+    }
+    /** Calculates the Inverted Matrix of the provided Matrix  | Restricted to 2x2 Matrices
+     *
+     * @param mat The Matrix that will be inverted
+     * @returns Inverted Matrix (In Expanded Form)
+     */
+    static invert2x2(mat) {
+        // Restrict to 2x2
+        if (mat.columns !== 2 && mat.rows !== 2) {
+            console.error("Matrix Invert: 'invert2x2' Restricted to 2x2 Matricies ONLY!");
+            return null;
+        }
+        // Get the Determinant
+        const det = this.det(mat);
+        // Check if Matrix is Invertible
+        if (det === 0 || det === null) {
+            console.error("Matrix Invert: Matrix is NOT Invertible!");
+            return null;
+        }
+        const arr = mat.dataCopy();
+        const colMax = arr.length - 1;
+        // Flip Right Across
+        for (let x = 0; x < arr.length; x++) {
+            arr[colMax - x][colMax - x] = mat.data[x][x];
+        }
+        // Negative Left Across
+        for (let x = colMax; x >= 0; x--) {
+            arr[x][colMax - x] = -arr[x][colMax - x];
+        }
+        // Apply data to Matrix
+        return new Matrix(mat.rows, mat.columns)
+            .map((_, x, y) => {
+            return arr[x][y] * (1 / det);
+        });
+    }
+    /** Calculates the Determinant of the provided Matrix
+     *
+     * @param mat The Matrix that will be calculated for Determinant
+     * @returns Determinant Value
+     */
+    static det(mat) {
+        // Validate the Matrix
+        // Shape HAS to be a Square Matrix and cannot be scalar
+        if (mat.rows !== mat.columns) {
+            console.error("Matrix Determinant: Invalid Matrix! Dimensions have to be a Square Matrix!");
+            return null;
+        }
+        // Check if scalar
+        else if (mat.rows === 1 && mat.columns === 1) {
+            return mat.data[0];
+        }
+        // Calculate the Determinant
+        let detRight = 1;
+        let detLeft = 1;
+        // Calculate the Rightwards Across Value
+        for (let x = 0; x < mat.data.length; x++) {
+            detRight *= mat.data[x][x];
+        }
+        // Calculate the Leftwards Across Value
+        const colMax = mat.data.length - 1;
+        for (let x = colMax; x >= 0; x--) {
+            detLeft *= mat.data[x][colMax - x];
+        }
+        // Return Determinant Value
+        return detRight - detLeft;
     }
     /** Creates a Matrix Object from an Array
      * @param array The (1D or 2D) Array that will be used to create the Object
