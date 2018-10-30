@@ -1,3 +1,53 @@
+## October 30, 2018
+---
+
+### Changes to **`CoordinateSystem Class`**
+- Modified Methods:
+    - **`drawCoordinateSystem`**
+        - Checks for **`data`** before calling to draw them
+    - **`calculateMagnitude`**
+        - Removed the "public static" to "static"
+    - **`calculateAngle`**
+        - Removed the "public static" to "static"
+    
+- Added new Methods:
+    - **`clearVectors`**
+        - Clears **`vectorData`**
+    - **`clearPoints`**
+        - Clears **`pointsData`**
+    - **`clearPolynomials`**
+        - Clears **`polynomialData`**
+    - **`drawBestFitLinear`**
+        - Takes in 1 Parameter (Requried)
+            - **`pointsArr`** - A 2D Array of all the Points in which to fit the line
+        - Draws a Linear Polynomial to Fit the points given
+    - **`getPointsArr`**
+        - Returns a 2D Array of all the Points in the **`pointsData`**
+
+### Changes to **`Matrix Class`**
+- Modified Methods:
+    - **`constructor`**
+        - Take in an Array to set as the Data instead of always calling the **`fromArray`** method
+    - **`multiply`** (*public method* and *static method*)
+        - Adapted method to Matrix Multiply Correctly
+        - Is able to Dot Product Vector with Matrix
+    - **`dot`** (*static method*)
+        - **Removed** 
+
+- Added new Methods:
+    - **`invert2x2`** (*static method*)
+        - Takes in 1 Parameter (Required)
+            - **`mat`** - The Matrix that will be Inverted
+        - Calculate and return the Inverted Matrix of the given Matrix Parameter
+    - **`det`** (*static method*)
+        - Takes in 1 Parameter (Required)
+            - **`mat`** - The Matrix that will be calculated for the Determinant
+        - Calculate and return the Determinant of the given Matrix Parameter
+
+---
+---
+
+
 ## October 29, 2018
 ---
 
