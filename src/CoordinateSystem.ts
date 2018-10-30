@@ -126,9 +126,9 @@ class CoordinateSystem {
         ctx.restore();
 
         // DRAW ALL DATA
-        this.drawVectors();
-        this.drawPoints();
-        this.drawPolynomials();
+        if(this.vectorData.length)      this.drawVectors();
+        if(this.pointsData.length)      this.drawPoints();
+        if(this.polynomialData.length)  this.drawPolynomials();
     }
 
     /** Resize Coordinate System
@@ -219,6 +219,21 @@ class CoordinateSystem {
         this.polynomialData = [];
     }
 
+    /** Clears all Vector Data */
+    public clearVectors(): void {
+        this.vectorData = [];
+    }
+
+    /** Clears all Points Data */
+    public clearPoints(): void {
+        this.pointsData = [];
+    }
+
+    /** Clears all Polynomial Data */
+    public clearPolynomials(): void {
+        this.polynomialData = [];
+    }
+
     /** Draw the Projection Matrix onto Coordinate System
      * @param projMatrix Projection Matrix (Matrix Object) of Dimensions [2,2]
      */
@@ -259,6 +274,51 @@ class CoordinateSystem {
 
         // Add to the Coordinate Plane
         this.addVector(vecShadow);
+    }
+
+    /** Draws Best Fit Linear Polynomoial to Points 
+     * 
+     * @param pointsArr The Points 2D Array
+     */
+    public drawBestFitLinear(pointsArr: number[][]): void {
+        // Ax = b
+        const Aarr = [];    // A Data Array for Matrix
+        const Barr = [];    // B Data Array for Matrix
+
+        // Get the Data
+        for (const point of pointsArr) {
+            Aarr.push([point[0], 1]);       // Push the Coefficient of m and b
+            Barr.push(point[1]);            // Push the 'y' value (mx + b = y)
+        }
+
+        // Construct the Matricies & Calculate Data
+        const A = new Matrix(Aarr);
+        const At = Matrix.transpose(A);
+        const AtA = Matrix.multiply(At, A);
+        const AtAinv = Matrix.invert2x2(AtA);
+        const B = new Matrix(Barr);
+        const AtB = Matrix.multiply(At, B);
+        const x = Matrix.multiply(AtAinv, AtB);
+
+        // Construct the mx + b Polynomial
+        const m = x.dataCopy()[0] as number;
+        const b = x.dataCopy()[1] as number;
+        
+        // Draw Polynomial
+        this.addPolynomial(m, b);
+    }
+
+    /** @returns Points Data as Array */
+    public getPointsArr(): number[][] {
+        // Append Data to arr
+        const arr = [];
+
+        for (const m of this.pointsData) {
+            arr.push(m.dataCopy()[0]);          // Deep Copy the Data
+        }
+
+        // Return Result
+        return arr;
     }
 
 
@@ -552,7 +612,7 @@ class CoordinateSystem {
      * @param y The y-axis Vector point
      * @returns The Magnitude Result of the 2D Vector
      */
-    public static calculateMagnitude(x: number, y: number): number {
+    static calculateMagnitude(x: number, y: number): number {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
@@ -562,7 +622,7 @@ class CoordinateSystem {
      * @param y The y-axis Vector point
      * @returns The Angle Result of the 2D Vector
      */
-    public static calculateAngle(x: number, y: number): number {
+    static calculateAngle(x: number, y: number): number {
         // Check if Vector on Left Side
         if (x < 0) {
             return Math.atan(y / x) - Math.PI;
