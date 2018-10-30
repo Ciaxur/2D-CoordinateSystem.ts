@@ -50,9 +50,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 - **addVector**
     - Adds a Vector onto the Coordinate System
-    - Optional: **`Matrix Object`** - Has to be a (2x1 or 1x2) Matrix Object
-    - **`x`** - The x-Axis of the Vector
+    - Optional: **`Matrix Object`** - Has to be a (mx1 or 1xn) Matrix Object
+    - **`x`** - The x-Axis of the Vector | **`Matrix Object`**
     - **`y`** - The y-Axis of the Vector
+
+- **addPoint**
+    - Adds a Point onto the Coordinate System
+    - Optional: **`Matrix Object`** - Has to be a (mx1 or 1xn)  Matrix Object
+    - **`x`** - The x-Axis of the Point | **`Matrix Object`**
+    - **`y`** - The y-Axis of the Point
+
+- **addPolynomial**
+    - Adds a Polynomial onto the Coordinate System
+    - Default is Linear Polynomial "*mx + b*"
+    - Alternative (**`Matrix Object`**) is a Polynomial
+    - Optional: **`Matrix Object`** - Has to be a (mx1 or 1xn)  Matrix Object
+    - **`m`** - The m value for a Linear Polynomial | **`Matrix Object`**
+    - **`b`** - The b value for a Linear Polynomial
 
 - **setPointerDim**
     - Sets the Triangle "Pointer" of the Vector's Dimensions
@@ -62,6 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
 - **reset**
     - Resets the Data that is on the Coordinate System (Removes all vectors)
 
+- **clearVectors**
+    - Resets the Vector Data that is on the Coordinate System
+
+- **clearPoints**
+    - Resets the Points Data that is on the Coordinate System
+
+- **clearPolynomials**
+    - Resets the Polynomial Data that is on the Coordinate System
+
 - **drawProjectionMatrix**
     - Draws an Estimate (for simple Projection Matricies) onto the Coordinate System
     - **`mat`** - The Projection Matrix Object (Has to be a Valid One | Will be validated anyway)
@@ -70,6 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
     - Draws the Projection of a given Vector onto a given Projection Matrix
     - **`matrixProjection`** - The Projection Matrix that will be used
     - **`vec`** - The Vector that will be used to project onto the Projection Matrix
+
+- **drawBestFitLienar**
+    - Draws Best Fit Linear Polynomoial to Points
+    - **`pointsArr`** - The Points 2D Array that will be used to calculate the Fit Line
+
+- **getPointsArr**
+    - Points Data as Array
 
 ---
 ### `Private Methods`
