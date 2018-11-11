@@ -183,7 +183,7 @@ class CoordinateSystem {
         this.pointsData = [];
     }
     /** Clears all Polynomial Data */
-    clearPolynomial() {
+    clearPolynomials() {
         this.polynomialData = [];
     }
     /** Draw the Projection Matrix onto Coordinate System
