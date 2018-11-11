@@ -1,3 +1,167 @@
+## November 11, 2018
+---
+
+### Added Class **`Menu Class`**
+- Added new Intefaces:
+    - **`Rectangle`**
+        - Holds Data for a Rectangle Object
+            - **`x`** - The X-Location of the Rectangle
+            - **`y`** - The Y-Location of the Rectangle
+            - **`w`** - The Width of the Rectangle
+            - **`h`** - The Height of the Rectangle
+            - **`primaryClr`** - Primary Color Object for the Rectangle (Of Type *RGBA*)
+            - **`secondaryClr`** - Secondary Color Object for the Rectangle (Optional) (Of Type *RGBA*)
+    - **`Button`**
+        - Holds Data for a Button Object
+            - **`rectShape`** - Shape of Button (Of Type *Rectangle*)
+            - **`text`** - The Text that the Button Holds (Optional)
+            - **`textPos`** - The Position of where the *`text`* will be (Of Type *Position2D*)
+            - **`fn`** - Holds Method that can be called (Optional)
+            - **`fnArgs`** - Number of Arguments required for *`fn`* (Optional)
+    
+    - **`RGBA`**
+        - Holds Data for Color
+            - **`r`** - The Red Color
+            - **`g`** - The Green Color
+            - **`b`** - The Blue Color
+            - **`a`** - The Alpha Color
+    
+    - **`Position2D`**
+        - Holds Data for 2D Positioning
+            - **`x`** - The X-Location Value
+            - **`y`** - The Y-Location Value
+
+    - **`Shape2D`**
+        - Holds Data for 2D Shapes
+            - **`w`** - The Width Value
+            - **`h`** - The Height Value
+
+- Added Data Variables:
+    - Added **`mainCoorSys`**
+        - Holds CoordinameSystem Object
+        - The Main Coordinate System Object that will be used for the *`Menu Object`*
+    
+    - Added **`ctx`**
+        - Holds the Canvas Rendering Context 2D Object used for Drawing
+
+    - Added **`isActive`**
+        - Holds the current Menu Status (*false = Menu Closed* or *true = Menu Opened*)
+    
+    - Added **`menuBtn`**
+        - Holds a *`Rectangle Object`* associated for the Menu Button Data
+    
+    - Added **`menuBox`**
+        - Holds a *`Rectangle Object`* associated for the Menu Box Data when Active
+    
+    - Added **`closeMenuBtn`**
+        - Holds a *`Rectangle Object`* associated for the Close Menu Button Data
+    
+    - Added **`buttons`**
+        - Holds a *`Button Object Array`* associated for all the Buttons inside of the *`menuBox`*
+
+- Added new Methods:
+    - **`constructor`**
+        - Requires a *`CoordinateSystem Object`* called **`coorSys`** and a *`CanvasRenderingContext2D`* called **`ctx`**
+        - Initiates the Class Data Variables
+
+    - **`initMenuButtons`** (*private method*)
+        - Does not required any Parameters
+        - Does not have any Returns
+        - Sets up the **`buttons`** Array with Data
+    
+    - **`start`** (*public method*)
+        - Does not required any Parameters
+        - Does not have any Returns
+        - Is responsible for the Logic behind what to draw
+    
+    - **`triggerMenu`** (*public method*)
+        - Does not required any Parameters
+        - Does not have any Returns
+        - Switches ON/OFF **`isActive`**
+    
+    - **`clickedButton`** (*public method*)
+        - Requires One Parameter **`index`**
+            - (1) Holds the **`buttons`** Array Index for what was clicked
+            - (2) Holds the *`Position2D`* Data for the Mouse Location
+        - Does not have any Returns
+        - Finds and activates the Function of the Button from **`buttons`** Array
+    
+    - **`setMenuBtnColor`** (*public method*)
+        - Two Optional Parameters **`plate`** and **`burgerSlide`**
+            - **`plate`** - An **`RGBA`** Interface Type that holds the Color for the Primary
+            - **`burgerSlide`** - An **`RGBA`** Interface Type that holds the Color for the Secondary
+        - Does not have any Returns
+        - Assigns new Color(s) for **`menuBtn`**
+    
+    - **`getButtonPlateColor`** (*public method*)
+        - Does not required any Parameters
+        - Returns **`menuBtn`** Primary Color *`RGBA`* Interface Type
+    
+    - **`getButtonBurgerSlidesColor`** (*public method*)
+        - Does not required any Parameters
+        - Returns **`menuBtn`** Secondary Color *`RGBA`* Interface Type
+    
+    - **`getButtonPosition`** (*public method*)
+        - Does not required any Parameters
+        - Returns **`menuBtn`** Position *`Position2D`* Interface Type
+
+    - **`getButtonShape`** (*public method*)
+        - Does not required any Parameters
+        - Returns **`menuBtn`** Shape *`Shape2D`* Interface Type
+    
+    - **`getMenuStatus`** (*public method*)
+        - Does not required any Parameters
+        - Returns **`isActive`**
+    
+    - **`getCloseMenuBtnPosition`** (*public method*)
+        - Does not required any Parameters
+        - Returns **`closeMenuBtn`** Position *`Position2D`* Interface Type
+    
+    - **`getCloseMenuBtnShape`** (*public method*)
+        - Does not required any Parameters
+        - Returns **`closeMenuBtn`** Position *`Position2D`* Interface Type
+    
+    - **`drawMenu`** (*private method*)
+        - Does not required any Parameters
+        - Does not have any Returns
+        - Draws Menu Box on Canvas
+    
+    - **`drawButton`** (*private method*)
+        - Does not required any Parameters
+        - Does not have any Returns
+        - Draws Menu Button on Canvas
+    
+    - **`colorToString`** (*private method*)
+        - Requires One Parameter
+            - **`rgba`** - An **`RGBA`** Interface Type
+        - Returns String value from Parameter Data
+        - Converts the **`rgba`** data to String
+            - "rgba(rVal, gVal, bVal, aVal)"
+    
+    - **`within`** (*static method*)
+        - Requires Three Parameters
+            - **`pos`** - A **`Position2D`** Interface Type
+                - Holds Position of Object
+            - **`objShae`** - A **`Shape2D`** Interface Type
+                - Holds Shape Data for Object
+            - **`mousePos`** - A **`Position2D`** Interface Type
+                - Holds Position of Mouse
+        - Returns Boolean for whether Mouse is within the Object or not
+        - Determine if Mouse Position is within the Object
+        
+    
+
+### Changes to **`app`**
+- Added new Event Listners:
+    - **`Mouse Clicked Event`**
+        - Determine where the mouse click occured on the new Menu System
+            - Toggle Menu (Close/Open)
+            - Click Menu Buttons (Actions)
+
+---
+---
+
+
 ## October 30, 2018
 ---
 
